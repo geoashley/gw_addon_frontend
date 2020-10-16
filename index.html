@@ -37,27 +37,64 @@
           
         </div>
       </div>
-      <button class="btn btn-info btn-lg" onclick="createSr()">Create a Service Request</button>
+      <button id="createButton" class="btn btn-info btn-lg" onclick="createSr()">Create a Service Request</button>
     </div>
     
   </body>
   <script>
+    const gwClient = GW.createClient("enservio", "coexpress");
+
+    const insideGw = () => {
+    const x = document.getElementById("createButton");
+    const compDisplay = x.style.display
+    x.style.display = "none";
+
+    gwClient.getClient()
+      .then((client) => {
+        console.log("Success in retrieving Client", client);
+
+        return client.getContext()
+      })
+      .then((value) => {
+        console.log("Success in retrieving context", value);
+        x.style.display = compDisplay;
+        return value.httpRequest("GET","prefill/claims"+value.candidates[0].id);
+
+      })
+      .then(response =>{
+        console.log(JSON.stringify("Response: "+JSON.stringify(response)));
+      })
+      .catch((error) => {
+        console.log("Unable to get client, library must be run in an iframe", error);
+        alert(error)
+      })
+      .finally(() => { console.log("Atleast here finally"); })
+
+  }
+    
     function createSr() {
-      var gwClient = GW.createClient("ashley", "gtest");
-      gwClient.getClient().then(function(client) {
-        return Promise.all([client, client.getContext()]);
-      }).then(function(values) {
-        //This is where you would use the Context to prefill and eventually create a service on your side
-        //We will just create a dummy SR
-        var serviceRequest = {
+      gwClient.getClient()
+        .then((client) =>  Promise.all([client, client.getContext()]))
+        .then((context) => {
+          console.log("Success in retrieving context", context);
+          const serviceRequest = {
           "referenceNumber": Math.floor(Math.random() * 10000),
          // "serviceableId": values[1].candidates[0].id,
           "referenceId1": Math.floor(Math.random() * 10000)
-        }
-        return Promise.all([values[0], values[0].invokeWithoutRefresh("createService", serviceRequest)])
-      }).then(function(values) {
-        values[0].completed(values[1].referenceNumber);
-      });
+          }
+          values[0].invokeWithoutRefresh("createService", serviceRequest)
+          then((serviceRequest) => {
+              console.log("Successfully created service request", serviceRequest);
+              values[0].completed(serviceRequest.referenceNumber);
+            })
+
+        })
+        .catch((error) => {
+          console.log("Unable to get client, library must be run in an iframe", error);
+        });
     }
+    
+  window.onload = insideGw;
+  
   </script>
 </html>
