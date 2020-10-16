@@ -77,7 +77,7 @@
       gwClient.getClient()
         .then((client) =>  Promise.all([client, client.getContext()]))
         .then((values) => {
-          console.log("Success in retrieving context", context);
+          console.log("Success in retrieving context", values[1]);
           const serviceRequest = {
           "referenceNumber": Math.floor(Math.random() * 10000),
          // "serviceableId": values[1].candidates[0].id,
