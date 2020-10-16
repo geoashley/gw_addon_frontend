@@ -76,7 +76,7 @@
     function createSr() {
       gwClient.getClient()
         .then((client) =>  Promise.all([client, client.getContext()]))
-        .then((context) => {
+        .then((values) => {
           console.log("Success in retrieving context", context);
           const serviceRequest = {
           "referenceNumber": Math.floor(Math.random() * 10000),
