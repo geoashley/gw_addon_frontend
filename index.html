@@ -84,7 +84,7 @@
           "referenceId1": Math.floor(Math.random() * 10000)
           }
           values[0].invokeWithoutRefresh("createService", serviceRequest)
-          then((serviceRequest) => {
+          .then((serviceRequest) => {
               console.log("Successfully created service request", serviceRequest);
               values[0].completed(serviceRequest.referenceNumber);
             })
