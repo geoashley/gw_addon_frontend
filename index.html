@@ -58,7 +58,7 @@
       .then((values) => {
         console.log("Success in retrieving context", JSON.stringify(values[1]));
         x.style.display = compDisplay;
-        return values[0].httpRequest("GET","prefill/claims"+value.candidates[1].id);
+        return values[0].httpRequest("GET","prefill/claims"+values[1].candidates[1].id);
 
       })
       .then(response =>{
