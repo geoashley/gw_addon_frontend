@@ -53,19 +53,19 @@
       .then((client) => {
         console.log("Success in retrieving Client", client);
 
-        return client.getContext()
+        return Promise.all([client, client.getContext()]);
       })
-      .then((value) => {
-        console.log("Success in retrieving context", value);
+      .then((values) => {
+        console.log("Success in retrieving context", JSON.stringify(values[1]));
         x.style.display = compDisplay;
-        return value.httpRequest("GET","prefill/claims"+value.candidates[0].id);
+        return values[0].httpRequest("GET","prefill/claims"+value.candidates[1].id);
 
       })
       .then(response =>{
         console.log(JSON.stringify("Response: "+JSON.stringify(response)));
       })
       .catch((error) => {
-        console.log("Unable to get client, library must be run in an iframe", error);
+        console.log("Error with GW connection, ", error);
         alert(error)
       })
       .finally(() => { console.log("Atleast here finally"); })
@@ -95,6 +95,6 @@
     }
     
   window.onload = insideGw;
-  
+
   </script>
 </html>
