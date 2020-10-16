@@ -62,7 +62,7 @@
 
       })
       .then(response =>{
-        console.log(JSON.stringify("Response: "+JSON.stringify(response)));
+        console.log(JSON.stringify("Response: "+JSON.stringify(response.json())));
       })
       .catch((error) => {
         console.log("Error with GW connection, ", error);
